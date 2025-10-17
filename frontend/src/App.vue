@@ -5,7 +5,7 @@ import TaskForm from './components/TaskForm.vue';
 import TaskList from './components/TaskList.vue';
 
 // A URL base da nossa API
-const API_URL = 'http://localhost:3000/tasks';
+const API_URL = import.meta.env.VITE_API_URL + '/tasks';
 
 // Uma variável reativa para armazenar nossa lista de tarefas
 const tasks = ref([]);
