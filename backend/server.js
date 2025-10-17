@@ -6,14 +6,13 @@ const cors = require('cors');
 const { Pool } = require('pg');
 
 // 2. Inicializar o Express
-const app = express();
-const PORT = 3000; // A porta em que nosso servidor vai rodar
+const app = express(); // <<< ESTA LINHA ESTAVA FALTANDO E É FUNDAMENTAL
 
-// 3. Configurar os Middlewares
+// 3. Configurar os Middlewares (devem vir antes das rotas)
 app.use(cors()); // Habilita o CORS para todas as requisições
 app.use(express.json()); // Habilita o servidor a entender JSON no corpo das requisições
 
-// Substitua a configuração antiga do Pool por esta
+// 4. Configurar a Conexão com o PostgreSQL
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL, // Usa a URL do banco de dados do ambiente
   ssl: {
@@ -21,7 +20,12 @@ const pool = new Pool({
   }
 });
 
-// --- DEFINIÇÃO DAS ROTAS (ENDPOINTS) DA API ---
+// 5. DEFINIÇÃO DAS ROTAS (ENDPOINTS) DA API
+
+// ROTA RAIZ para Health Check
+app.get('/', (req, res) => {
+    res.send('API da To-Do List está no ar!');
+});
 
 // ROTA GET: Obter todas as tarefas
 app.get('/tasks', async (req, res) => {
@@ -78,7 +82,8 @@ app.put('/tasks/:id', async (req, res) => {
   }
 });
 
-// 5. Iniciar o Servidor
+// 6. Iniciar o Servidor (esta deve ser a ÚLTIMA coisa no arquivo)
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });
