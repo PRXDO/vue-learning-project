@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 // 1. Importar os pacotes necessários
 const express = require('express');
 const cors = require('cors');
@@ -11,13 +13,12 @@ const PORT = 3000; // A porta em que nosso servidor vai rodar
 app.use(cors()); // Habilita o CORS para todas as requisições
 app.use(express.json()); // Habilita o servidor a entender JSON no corpo das requisições
 
-// 4. Configurar a Conexão com o PostgreSQL
+// Substitua a configuração antiga do Pool por esta
 const pool = new Pool({
-  user: 'postgres', // Seu usuário do Postgres
-  host: 'localhost',
-  database: 'todo_app',
-  password: '1234', // A senha que você definiu na instalação
-  port: 5432,
+  connectionString: process.env.DATABASE_URL, // Usa a URL do banco de dados do ambiente
+  ssl: {
+    rejectUnauthorized: false
+  }
 });
 
 // --- DEFINIÇÃO DAS ROTAS (ENDPOINTS) DA API ---
